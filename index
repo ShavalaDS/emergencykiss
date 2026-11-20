@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}</style>
+<title>Emergency Kiss</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Space+Mono:wght@400;700&display=swap">
+<style>
+:root {
+  --night: #0c1424;
+  --sea: #15233b;
+  --foam: #f4e9e1;
+  --muted: #9fb0c8;
+  --kiss: #e0334c;
+  --kiss-deep: #a3162f;
+  --glow: #ff6b81;
+  --font-display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-label: "Space Mono", ui-monospace, "Courier New", monospace;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body {
+  background: radial-gradient(120% 90% at 50% 0%, var(--sea) 0%, var(--night) 70%);
+  background-color: var(--night);
+  color: var(--foam);
+  font-family: var(--font-display);
+  padding-block: 24px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid;
+  place-items: center;
+  overflow-x: hidden;
+}
+.stage { width: 100%; max-width: 440px; text-align: center; position: relative; z-index: 1; }
+
+.box {
+  background: linear-gradient(180deg, #1b2b47, #111c31);
+  border: 2px solid #2c4166;
+  border-radius: 10px;
+  padding: 28px 22px 26px;
+  box-shadow: 0 24px 60px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.06);
+  position: relative;
+}
+.lamp {
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--kiss);
+  position: absolute; top: 12px; right: 14px;
+  box-shadow: 0 0 12px var(--glow);
+  animation: blink 1.4s ease-in-out infinite;
+}
+.label {
+  font-family: var(--font-label);
+  font-size: .78rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.label.alert { color: var(--glow); font-weight: 700; }
+h1 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2.1rem, 9vw, 2.9rem);
+  line-height: 1.05;
+  margin: 10px 0 6px;
+  text-wrap: balance;
+}
+.sub { font-style: italic; color: var(--muted); font-size: 1.2rem; margin: 0 0 22px; text-wrap: balance; }
+
+.press {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  width: min(220px, 62vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 28%, var(--glow), var(--kiss) 45%, var(--kiss-deep));
+  color: #fff;
+  font-family: var(--font-label);
+  font-weight: 700;
+  font-size: .95rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  box-shadow: 0 10px 0 #6e0f20, 0 18px 36px rgba(224,51,76,.45), inset 0 3px 8px rgba(255,255,255,.35);
+  transition: transform .12s ease, box-shadow .12s ease;
+  animation: pulse 2s ease-in-out infinite;
+  display: inline-grid;
+  place-items: center;
+  gap: 4px;
+  padding: 0;
+}
+.press svg { width: 46%; height: auto; }
+.press:active, .press.down {
+  transform: translateY(8px);
+  box-shadow: 0 2px 0 #6e0f20, 0 8px 18px rgba(224,51,76,.4), inset 0 3px 8px rgba(255,255,255,.3);
+  animation: none;
+}
+.press:focus-visible, .again:focus-visible, .back:focus-visible { outline: 3px solid var(--foam); outline-offset: 4px; }
+.fine { margin-top: 24px; }
+
+.kiss-view { display: none; }
+.stage.open .box { display: none; }
+.stage.open .kiss-view { display: block; }
+.lips { width: min(260px, 70vw); height: auto; display: block; margin: 0 auto 6px; animation: pop .7s cubic-bezier(.2,1.6,.4,1) both; filter: drop-shadow(0 10px 24px rgba(224,51,76,.5)); }
+.ring { position: absolute; left: 50%; top: 90px; width: 40px; height: 40px; margin-left: -20px; border-radius: 50%; border: 2px solid var(--glow); opacity: 0; animation: ring 1s ease-out .15s both; }
+.mwah { font-family: var(--font-label); letter-spacing: .3em; font-size: .85rem; color: var(--glow); text-transform: uppercase; margin: 0 0 18px; animation: rise .6s ease .35s both; }
+.note {
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(1.45rem, 6.4vw, 1.9rem);
+  line-height: 1.3;
+  margin: 0 auto 26px;
+  max-width: 26ch;
+  text-wrap: balance;
+  min-height: 5.2em;
+  animation: rise .7s ease .5s both;
+}
+.actions { display: flex; flex-direction: column; align-items: center; gap: 12px; animation: rise .6s ease .8s both; }
+.again {
+  appearance: none; cursor: pointer;
+  background: var(--kiss); color: #fff;
+  border: 0; border-radius: 999px;
+  padding: 14px 26px;
+  font-family: var(--font-label); font-weight: 700; font-size: .82rem; letter-spacing: .14em; text-transform: uppercase;
+  box-shadow: 0 6px 20px rgba(224,51,76,.4);
+}
+.again:hover { background: var(--glow); }
+.back {
+  appearance: none; cursor: pointer; background: none; border: 0;
+  color: var(--muted); font-family: var(--font-label); font-size: .75rem; letter-spacing: .14em; text-transform: uppercase;
+  padding: 8px 12px; text-decoration: underline; text-underline-offset: 4px;
+}
+.count { margin-top: 18px; min-height: 1.2em; }
+
+.hearts { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+.heart { position: absolute; bottom: -40px; color: var(--glow); opacity: 0; animation: float linear forwards; }
+
+@keyframes pulse { 0%,100% { box-shadow: 0 10px 0 #6e0f20, 0 18px 36px rgba(224,51,76,.4), inset 0 3px 8px rgba(255,255,255,.35); } 50% { box-shadow: 0 10px 0 #6e0f20, 0 18px 60px rgba(255,107,129,.8), inset 0 3px 8px rgba(255,255,255,.35); } }
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: .25; } }
+@keyframes pop { 0% { transform: scale(.2) rotate(-12deg); opacity: 0; } 100% { transform: scale(1) rotate(0); opacity: 1; } }
+@keyframes ring { 0% { transform: scale(.5); opacity: .9; } 100% { transform: scale(9); opacity: 0; } }
+@keyframes rise { from { transform: translateY(14px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes float { 0% { transform: translateY(0) translateX(0) scale(.7); opacity: 0; } 15% { opacity: .9; } 100% { transform: translateY(-105vh) translateX(var(--dx)) scale(1.15); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .press, .lamp, .lips, .ring, .mwah, .note, .actions { animation: none !important; }
+  .heart { display: none; }
+}
+</style>
+
+<main class="stage" id="stage">
+  <section class="box" id="box" aria-labelledby="t">
+    <span class="lamp" aria-hidden="true"></span>
+    <div class="label alert">Emergency room for the heart</div>
+    <h1 id="t">In case of emergency, press</h1>
+    <p class="sub">One of my kisses, valid anytime, anywhere.</p>
+    <button class="press" id="press" type="button" aria-label="Emergency Kiss: press to receive a kiss">
+      <svg viewBox="0 0 200 120" aria-hidden="true"><path d="M10 62 C40 40 70 28 100 46 C130 28 160 40 190 62 C160 70 130 76 100 76 C70 76 40 70 10 62 Z" fill="#fff"/><path d="M10 62 C40 70 70 76 100 76 C130 76 160 70 190 62 C170 100 130 112 100 112 C70 112 30 100 10 62 Z" fill="#fff" fill-opacity=".85"/></svg>
+      Emergency<br>Kiss
+    </button>
+    <div class="label fine">Never expires &middot; Unlimited use</div>
+  </section>
+
+  <section class="kiss-view" id="kissView" aria-live="polite">
+    <span class="ring" aria-hidden="true"></span>
+    <svg class="lips" viewBox="0 0 200 120" role="img" aria-label="A kiss">
+      <path d="M10 62 C40 40 70 28 100 46 C130 28 160 40 190 62 C160 70 130 76 100 76 C70 76 40 70 10 62 Z" fill="#e0334c"/>
+      <path d="M10 62 C40 70 70 76 100 76 C130 76 160 70 190 62 C170 100 130 112 100 112 C70 112 30 100 10 62 Z" fill="#c4213a"/>
+      <path d="M10 62 C40 70 70 76 100 76 C130 76 160 70 190 62" fill="none" stroke="#7d0f22" stroke-width="3" stroke-linecap="round"/>
+      <path d="M60 94 C80 104 120 104 140 94" fill="none" stroke="#ff9aa9" stroke-width="4" stroke-linecap="round" opacity=".55"/>
+      <path d="M55 48 C75 38 90 40 98 48" fill="none" stroke="#ff9aa9" stroke-width="4" stroke-linecap="round" opacity=".5"/>
+    </svg>
+    <p class="mwah">Mwah</p>
+    <p class="note" id="note"></p>
+    <div class="actions">
+      <button class="again" id="again" type="button">I need another one</button>
+      <button class="back" id="back" type="button">Back to the box</button>
+    </div>
+    <div class="label count" id="count"></div>
+  </section>
+</main>
+<div class="hearts" id="hearts" aria-hidden="true"></div>
+
+<script>
+(function () {
+  var notes = [
+    "Prescription: one kiss, right now. Side effect: smiling for no reason for the rest of the day.",
+    "The sea has its tides. I have you. This kiss arrives on time, even at low tide.",
+    "If everything feels heavy today, rest your head here. This kiss can hold up the world for a full minute.",
+    "Some nights have too many stars, and none shine like you when you laugh. This kiss is for that laugh.",
+    "My hands remember the shape of yours. This kiss is their signature.",
+    "I kiss you the way the wind kisses the sails: without asking, and staying as long as it takes.",
+    "Emergency declared, help on the way: one kiss, two hugs, and all the patience you need.",
+    "Where you are, the noise gets quieter. Take this kiss and keep it in your pocket for later.",
+    "You are the part of the day I never want to end. This kiss extends the hours.",
+    "If your heart is in a hurry, this kiss walks beside it. If it is afraid, this kiss holds its hand.",
+    "I learned your name the way you learn a song: without noticing, and now I cannot stop singing it.",
+    "A spare kiss, saved just for today. I have more, don't worry."
+  ];
+
+  var stage = document.getElementById("stage");
+  var press = document.getElementById("press");
+  var again = document.getElementById("again");
+  var back = document.getElementById("back");
+  var note = document.getElementById("note");
+  var countEl = document.getElementById("count");
+  var hearts = document.getElementById("hearts");
+  var KEY = "emergency-kiss-count";
+  var last = -1;
+  var used = 0;
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  try { used = parseInt(localStorage.getItem(KEY), 10) || 0; } catch (e) { used = 0; }
+
+  function save() { try { localStorage.setItem(KEY, String(used)); } catch (e) {} }
+
+  function pick() {
+    var i;
+    do { i = Math.floor(Math.random() * notes.length); } while (i === last && notes.length > 1);
+    last = i;
+    return notes[i];
+  }
+
+  function burst(n) {
+    if (reduce) return;
+    for (var k = 0; k < n; k++) {
+      var h = document.createElement("span");
+      h.className = "heart";
+      h.textContent = "\u2665";
+      h.style.left = (Math.random() * 100) + "vw";
+      h.style.fontSize = (14 + Math.random() * 26) + "px";
+      h.style.setProperty("--dx", ((Math.random() - 0.5) * 120) + "px");
+      h.style.animationDuration = (3.2 + Math.random() * 2.8) + "s";
+      h.style.animationDelay = (Math.random() * 0.9) + "s";
+      hearts.appendChild(h);
+      (function (el) { setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 8000); })(h);
+    }
+  }
+
+  function restartAnim(selector) {
+    var els = stage.querySelectorAll(selector);
+    for (var i = 0; i < els.length; i++) {
+      els[i].style.animation = "none";
+      void els[i].offsetWidth;
+      els[i].style.animation = "";
+    }
+  }
+
+  function show() {
+    used += 1; save();
+    note.textContent = pick();
+    countEl.textContent = "Emergency kisses used: " + used;
+    restartAnim(".lips, .ring, .mwah, .note, .actions");
+    burst(22);
+  }
+
+  press.addEventListener("click", function () {
+    press.classList.add("down");
+    setTimeout(function () {
+      press.classList.remove("down");
+      stage.classList.add("open");
+      show();
+      again.focus({ preventScroll: true });
+    }, reduce ? 0 : 160);
+  });
+  again.addEventListener("click", show);
+  back.addEventListener("click", function () {
+    stage.classList.remove("open");
+    press.focus({ preventScroll: true });
+  });
+})();
+</script>
+</html>
